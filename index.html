@@ -113,6 +113,17 @@
     </div>
 </div>
 
+<!-- Netlify 隐藏表单副本（用于让 Netlify 扫描到） -->
+<div style="position: absolute; left: -9999px; top: -9999px;">
+    <form name="feedback" data-netlify="true" netlify-honeypot="bot-field" method="POST" action="/thank-you">
+        <input type="hidden" name="form-name" value="feedback" />
+        <input type="text" name="type" />
+        <textarea name="message"></textarea>
+        <input type="text" name="bot-field" />
+    </form>
+</div>
+
+
 <!-- 自定义库弹窗 -->
 <div id="customModal" class="custom-modal" style="display: none;">
     <div class="custom-card">
