@@ -1,4 +1,4 @@
-// script.js - 完整版（含事项来源选择，无反馈无计数器）
+// script.js - 完整版（含事项来源、自定义库、导出/导入）
 
 // ==================== 用户自定义库 ====================
 let userTasks = [];
@@ -243,6 +243,54 @@ if (saveCustomBtn) saveCustomBtn.addEventListener('click', () => {
     document.getElementById('newName').value = '';
     alert('添加成功！');
 });
+
+// ==================== 导出/导入功能 ====================
+const exportBtn = document.getElementById('exportDataBtn');
+if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+        const dataStr = JSON.stringify(userTasks, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `egg_custom_backup_${new Date().toISOString().slice(0,19)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert('已导出自定义库到 JSON 文件');
+    });
+}
+
+const importBtn = document.getElementById('importDataBtn');
+const fileInput = document.getElementById('importFileInput');
+if (importBtn && fileInput) {
+    importBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const imported = JSON.parse(event.target.result);
+                if (Array.isArray(imported)) {
+                    userTasks = imported;
+                    saveUserTasks();
+                    renderCustomList();
+                    alert(`成功导入 ${userTasks.length} 条自定义事项！`);
+                } else {
+                    alert('文件格式错误：不是有效的 JSON 数组');
+                }
+            } catch (err) {
+                alert('解析失败：请确保选择的是正确的 JSON 文件');
+            }
+            fileInput.value = '';
+        };
+        reader.readAsText(file);
+    });
+}
 
 // ==================== 事件绑定 ====================
 eggWrapper.addEventListener('click', crackEgg);

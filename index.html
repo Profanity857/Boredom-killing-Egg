@@ -13,19 +13,16 @@
         <span class="subtitle">敲碎一颗蛋，获得今日灵感</span>
     </div>
 
-    <!-- 筛选面板 -->
     <div class="filter-panel">
         <div class="filter-header" id="filterHeader">
             <span>🔍 筛选条件</span>
             <span id="filterArrow">▼</span>
         </div>
         <div class="filter-body" id="filterBody">
-            <!-- 事项来源 - 放在最上面 -->
             <div class="filter-group">
                 <span class="filter-label">📚 事项来源</span>
                 <div class="option-group" id="sourceGroup"></div>
             </div>
-
             <div class="filter-group">
                 <span class="filter-label">💰 预算</span>
                 <div class="option-group" id="budgetGroup"></div>
@@ -48,7 +45,6 @@
         </div>
     </div>
 
-    <!-- 抽蛋区域 -->
     <div class="egg-machine">
         <div class="tap-hint-top">👇 点击蛋抽取</div>
         <div class="egg-wrapper" id="eggWrapper">
@@ -64,7 +60,6 @@
     </div>
 </div>
 
-<!-- 纸条弹窗 -->
 <div id="paperModal" class="modal-mask" style="display: none;">
     <div class="paper">
         <div class="paper-tape"></div>
@@ -78,16 +73,19 @@
     </div>
 </div>
 
-<!-- 左侧自定义库按钮 -->
 <div class="custom-fab" id="customFab">
     <div class="custom-icon">✏️</div>
     <div class="custom-text">我的点子</div>
 </div>
 
-<!-- 自定义库弹窗 -->
 <div id="customModal" class="custom-modal" style="display: none;">
     <div class="custom-card">
         <h3>📦 我的自定义点子</h3>
+        <p style="font-size: 0.7rem; color: #a5673f; margin-bottom: 12px; text-align: center;">
+            数据仅保存在本浏览器中，<br>
+            无痕浏览/清除缓存会丢失。<br>
+            如有需要，建议定期「导出数据」备份。
+        </p>
         <div id="customList"></div>
         <button id="showAddFormBtn" class="add-btn">➕ 添加新点子</button>
         <div id="addForm" style="display: none; margin-top: 16px;">
@@ -115,6 +113,11 @@
             </select>
             <button id="saveCustomBtn" class="add-btn">保存</button>
         </div>
+        <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <button id="exportDataBtn" class="add-btn" style="flex:1; background: #e7cfb5;">📤 导出数据</button>
+            <button id="importDataBtn" class="add-btn" style="flex:1; background: #e7cfb5;">📥 导入数据</button>
+        </div>
+        <input type="file" id="importFileInput" accept=".json" style="display: none;" />
         <button id="closeCustomModal" class="add-btn" style="background: #e7cfb5; margin-top: 10px;">关闭</button>
     </div>
 </div>
