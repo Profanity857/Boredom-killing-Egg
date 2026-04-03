@@ -4,401 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>敲碎无聊</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: linear-gradient(145deg, #f9e7d2 0%, #f5d6b3 100%);
-            min-height: 100vh;
-            padding: 20px 16px 40px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .title {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #6b3e1c;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            display: block;
-        }
-        .subtitle {
-            font-size: 0.85rem;
-            color: #a5673f;
-            margin-top: 8px;
-            display: block;
-        }
-
-        .filter-panel {
-            background: rgba(255,245,235,0.95);
-            border-radius: 40px;
-            margin-bottom: 30px;
-            overflow: hidden;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            padding: 14px 20px;
-            background: #fff0e4;
-            font-weight: bold;
-            color: #8b5a2b;
-            cursor: pointer;
-        }
-        .filter-body {
-            padding: 16px 20px 24px;
-            display: none;
-        }
-        .filter-body.open {
-            display: block;
-        }
-        .filter-group {
-            margin-bottom: 20px;
-        }
-        .filter-label {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #6b3e1c;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .option-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .option {
-            background: #fef5ed;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            color: #8b5a2b;
-            border: 1px solid #f0cfb0;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .option.active {
-            background: #ffb882;
-            color: white;
-            border-color: #ff9f55;
-            box-shadow: 0 2px 8px rgba(255,140,0,0.3);
-        }
-        .filter-actions {
-            margin-top: 16px;
-            text-align: center;
-        }
-        .reset-btn {
-            background: #e7cfb5;
-            color: #8b5a2b;
-            font-size: 0.8rem;
-            padding: 8px 20px;
-            border-radius: 40px;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .reset-btn:active {
-            transform: scale(0.96);
-        }
-
-        .egg-machine {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-        }
-        .tap-hint-top {
-            font-size: 0.85rem;
-            color: #9b6a3c;
-            opacity: 0.8;
-            margin-bottom: 15px;
-        }
-        .egg-wrapper {
-            width: 200px;
-            height: 240px;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .egg {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 35% 40%, #fff7e8, #fce5c4);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            box-shadow: 0 12px 20px rgba(0,0,0,0.2), inset 0 -4px 0 rgba(0,0,0,0.05);
-            position: relative;
-            overflow: hidden;
-        }
-        .egg-spot {
-            position: absolute;
-            background: rgba(210,150,75,0.3);
-            border-radius: 50%;
-        }
-        .egg-spot:nth-child(1) { width: 22px; height: 16px; top: 30%; left: 20%; }
-        .egg-spot:nth-child(2) { width: 32px; height: 26px; top: 55%; left: 60%; }
-        .egg-spot:nth-child(3) { width: 18px; height: 14px; top: 70%; left: 35%; }
-
-        .crack-animation .egg {
-            animation: shake 0.3s infinite;
-        }
-        @keyframes shake {
-            0% { transform: translate(0,0) rotate(0deg); }
-            25% { transform: translate(4px, -3px) rotate(2deg); }
-            50% { transform: translate(-3px, 2px) rotate(-2deg); }
-            75% { transform: translate(2px, -1px) rotate(1deg); }
-            100% { transform: translate(0,0) rotate(0); }
-        }
-
-        .crack-line {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100px;
-            height: 100px;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 10;
-        }
-        .crack-line::before,
-        .crack-line::after,
-        .crack-line .crack-piece {
-            content: '';
-            position: absolute;
-            background: #5a3a1e;
-            box-shadow: 0 0 3px #ffd58c;
-            border-radius: 2px;
-        }
-        .crack-line::before {
-            width: 3px;
-            height: 90px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(35deg);
-        }
-        .crack-line::after {
-            width: 2px;
-            height: 60px;
-            top: 35%;
-            left: 65%;
-            transform: translate(-50%, -50%) rotate(-20deg);
-        }
-        .crack-line .crack-piece {
-            width: 2px;
-            height: 50px;
-            top: 65%;
-            left: 40%;
-            transform: translate(-50%, -50%) rotate(70deg);
-        }
-
-        .modal-mask {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.2s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .paper {
-            width: 280px;
-            background: #fffef7;
-            border-radius: 16px;
-            padding: 24px 20px 32px;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            transform: rotate(-1deg);
-            border: 1px solid #f0dbbc;
-        }
-        .paper-tape {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 30px;
-            background: #f9e4b7;
-            opacity: 0.8;
-            border-radius: 8px;
-        }
-        .paper-content {
-            text-align: center;
-        }
-        .paper-emoji {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        .paper-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #c2803c;
-            border-bottom: 1px dashed #f0cfb0;
-            display: inline-block;
-            padding-bottom: 6px;
-            margin-bottom: 16px;
-        }
-        .paper-task {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #5c3719;
-            margin: 16px 0;
-            line-height: 1.3;
-        }
-        .paper-tags {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .tag {
-            background: #f4e2cc;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            color: #a5673f;
-        }
-        .paper-close {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            width: 28px;
-            height: 28px;
-            background: #e7cfb5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: #8b5a2b;
-            cursor: pointer;
-        }
-
-        .feedback-fab {
-            position: fixed;
-            bottom: 20px;
-            right: 16px;
-            width: auto;
-            height: auto;
-            background: transparent;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            padding: 8px;
-            z-index: 200;
-            cursor: pointer;
-        }
-        .feedback-fab:active {
-            opacity: 0.6;
-            transform: scale(0.95);
-        }
-        .fab-icon {
-            font-size: 2rem;
-            color: #c2803c;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        .fab-text {
-            font-size: 0.7rem;
-            color: #a5673f;
-            font-weight: 500;
-        }
-
-        .feedback-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1100;
-        }
-        .feedback-card {
-            width: 300px;
-            background: #fffef7;
-            border-radius: 32px;
-            padding: 24px 20px;
-            position: relative;
-        }
-        .feedback-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #6b3e1c;
-        }
-        .feedback-option {
-            background: #f4e2cc;
-            border-radius: 60px;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-            color: #6b3e1c;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .feedback-option:active {
-            background: #ffb882;
-            color: white;
-        }
-        .feedback-textarea {
-            width: 100%;
-            background: #fef5ed;
-            border-radius: 20px;
-            padding: 12px;
-            margin: 16px 0;
-            border: 1px solid #f0cfb0;
-            font-family: inherit;
-            font-size: 0.85rem;
-            resize: vertical;
-            box-sizing: border-box;
-        }
-        .feedback-submit-btn {
-            background: #ffb882;
-            color: white;
-            border: none;
-            border-radius: 60px;
-            padding: 12px;
-            width: 100%;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close-feedback {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #a5673f;
-        }
-        button, .option, .reset-btn, .feedback-fab, .feedback-option, .feedback-submit-btn {
-            user-select: none;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
@@ -407,6 +13,7 @@
         <span class="subtitle">敲碎一颗蛋，获得今日灵感</span>
     </div>
 
+    <!-- 筛选面板（不变） -->
     <div class="filter-panel">
         <div class="filter-header" id="filterHeader">
             <span>🔍 筛选条件</span>
@@ -435,6 +42,7 @@
         </div>
     </div>
 
+    <!-- 抽蛋区域 -->
     <div class="egg-machine">
         <div class="tap-hint-top">👇 点击蛋抽取</div>
         <div class="egg-wrapper" id="eggWrapper">
@@ -448,8 +56,12 @@
             </div>
         </div>
     </div>
+
+    <!-- 访问计数器（蛋的下方） -->
+    <div class="visit-counter">🥚 已有 <span id="visitCount">0</span> 人敲过这颗蛋</div>
 </div>
 
+<!-- 纸条弹窗 -->
 <div id="paperModal" class="modal-mask" style="display: none;">
     <div class="paper">
         <div class="paper-tape"></div>
@@ -463,327 +75,56 @@
     </div>
 </div>
 
+<!-- 右侧反馈按钮 -->
 <div class="feedback-fab" id="feedbackFab">
     <div class="fab-icon">💬</div>
     <div class="fab-text">反馈</div>
 </div>
 
+<!-- 左侧自定义库按钮（铅笔图标） -->
+<div class="custom-fab" id="customFab">
+    <div class="custom-icon">✏️</div>
+    <div class="custom-text">我的点子</div>
+</div>
+
+<!-- 反馈弹窗（Netlify Forms） -->
 <div id="feedbackModal" class="feedback-modal" style="display: none;">
     <div class="feedback-card">
         <div class="close-feedback" id="closeFeedbackModal">✕</div>
         <h3>📢 告诉蛋蛋你的想法</h3>
-        <div id="feedbackOptions">
-            <div class="feedback-option" data-type="idea">💡 我也有个很棒的点子来对抗无聊！</div>
-            <div class="feedback-option" data-type="wrong">⚠️ 有个事件好像分类不太对呢……</div>
-            <div class="feedback-option" data-type="other">🗣️ 我还有别的话要和蛋蛋说！</div>
-        </div>
-        <textarea id="feedbackText" class="feedback-textarea" placeholder="请写下你的建议或问题..." rows="3" style="display: none;"></textarea>
-        <button id="submitFeedbackBtn" class="feedback-submit-btn" style="display: none;">提交</button>
+        <form id="feedbackForm" data-netlify="true" name="feedback" netlify-honeypot="bot-field" method="POST" action="/">
+            <input type="hidden" name="form-name" value="feedback" />
+            <input type="hidden" id="feedbackType" name="type" value="" />
+            <div id="feedbackOptions">
+                <div class="feedback-option" data-type="idea">💡 我也有个很棒的点子来对抗无聊！</div>
+                <div class="feedback-option" data-type="wrong">⚠️ 有个事件好像分类不太对呢……</div>
+                <div class="feedback-option" data-type="other">🗣️ 我还有别的话要和蛋蛋说！</div>
+            </div>
+            <textarea id="feedbackText" name="message" class="feedback-textarea" placeholder="请写下你的建议或问题..." rows="3" style="display: none;"></textarea>
+            <button type="submit" id="submitFeedbackBtn" class="feedback-submit-btn" style="display: none;">提交</button>
+        </form>
     </div>
 </div>
 
-<script>
-    // ==================== 零成本配置 ====================
-    // 反馈功能使用“复制到剪贴板 + 手动发送邮件”方案，无需任何第三方服务
-    // 你可以把下面的邮箱改成你自己的
-    const CONTACT_EMAIL = "1608472758@qq.com";   // 👈 改成你的邮箱，用户会看到这个地址
+<!-- 自定义库弹窗 -->
+<div id="customModal" class="custom-modal" style="display: none;">
+    <div class="custom-card">
+        <h3>📦 我的自定义点子</h3>
+        <div id="customList"></div>
+        <button id="showAddFormBtn" class="add-btn">➕ 添加新点子</button>
+        <div id="addForm" style="display: none; margin-top: 16px;">
+            <input type="text" id="newName" placeholder="活动名称" required>
+            <select id="newBudget"><option value="free">免费</option><option value="cheap">小资</option><option value="medium">中等</option><option value="expensive">稍贵</option></select>
+            <select id="newDuration"><option value="short">15分钟内</option><option value="medium">半小时</option><option value="long">1-2小时</option><option value="whole">半天以上</option></select>
+            <select id="newPlace"><option value="indoor">室内</option><option value="outdoor">户外</option></select>
+            <select id="newPeople"><option value="alone">独自</option><option value="couple">结伴</option><option value="group">多人</option></select>
+            <button id="saveCustomBtn" class="add-btn">保存</button>
+        </div>
+        <button id="closeCustomModal" class="add-btn" style="background: #e7cfb5; margin-top: 10px;">关闭</button>
+    </div>
+</div>
 
-    // ==================== 事项库（完全按你提供的列表） ====================
-    const TASKS = [
-        { name: '看一部豆瓣高分短片', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '去公园散步20分钟', budget: 'free', duration: 'short', place: 'outdoor', people: 'alone' },
-        { name: '画画/涂鸦', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '听一期播客', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '整理房间一个角落', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '去咖啡馆写日记', budget: 'cheap', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '逛超市买点零食', budget: 'cheap', duration: 'medium', place: 'indoor', people: 'couple' },
-        { name: '户外骑行30分钟', budget: 'free', duration: 'medium', place: 'outdoor', people: 'alone' },
-        { name: '看一场电影', budget: 'medium', duration: 'long', place: 'indoor', people: 'couple' },
-        { name: '尝试做一道新菜', budget: 'medium', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '去书店翻翻书', budget: 'free', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '爬山/登高', budget: 'free', duration: 'whole', place: 'outdoor', people: 'group' },
-        { name: '付费学习一门网课', budget: 'medium', duration: 'whole', place: 'indoor', people: 'alone' },
-        { name: '和朋友约饭', budget: 'medium', duration: 'long', place: 'indoor', people: 'couple' },
-        { name: '逛博物馆/展览', budget: 'cheap', duration: 'long', place: 'indoor', people: 'couple' },
-        { name: '阳台晒太阳发呆', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '夜跑', budget: 'free', duration: 'medium', place: 'outdoor', people: 'alone' },
-        { name: '做手账/拼贴', budget: 'cheap', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '写一个小故事', budget: 'free', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '给家人打个电话', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '为一座城市做旅行计划', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '定下明天要做的事', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '看一会电子书', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '清理相册', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '整理收藏夹', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '奖励自己一袋酸奶', budget: 'cheap', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '在此刻写下一封遗书', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '冥想10分钟', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '写一篇日记/周记', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '去图书馆借一本书', budget: 'free', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '野餐（自带食物）', budget: 'cheap', duration: 'long', place: 'outdoor', people: 'group' },
-        { name: '放风筝', budget: 'cheap', duration: 'medium', place: 'outdoor', people: 'couple' },
-        { name: '逛创意市集', budget: 'cheap', duration: 'long', place: 'outdoor', people: 'couple' },
-        { name: '打羽毛球', budget: 'cheap', duration: 'medium', place: 'outdoor', people: 'couple' },
-        { name: '玩桌游（狼人杀/UNO）', budget: 'free', duration: 'long', place: 'indoor', people: 'group' },
-        { name: '包饺子/做饭聚餐', budget: 'medium', duration: 'long', place: 'indoor', people: 'group' },
-        { name: '唱 KTV', budget: 'medium', duration: 'long', place: 'indoor', people: 'group' },
-        { name: '泡温泉', budget: 'expensive', duration: 'whole', place: 'outdoor', people: 'couple' },
-        { name: '看演唱会/音乐节', budget: 'expensive', duration: 'whole', place: 'outdoor', people: 'group' },
-        { name: '做 SPA / 按摩', budget: 'expensive', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '住民宿体验', budget: 'expensive', duration: 'whole', place: 'indoor', people: 'couple' },
-        { name: '练习书法/硬笔字', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '拼图/乐高', budget: 'medium', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '逛花市买一束花', budget: 'cheap', duration: 'medium', place: 'outdoor', people: 'alone' },
-        { name: '去天文馆/科技馆', budget: 'cheap', duration: 'long', place: 'indoor', people: 'couple' },
-        { name: '学习一门外语（30分钟）', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '去游泳馆游泳', budget: 'medium', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '攀岩体验', budget: 'medium', duration: 'medium', place: 'indoor', people: 'couple' },
-        { name: '玩密室逃脱', budget: 'medium', duration: 'long', place: 'indoor', people: 'group' },
-        { name: '参加烘焙课程', budget: 'medium', duration: 'long', place: 'indoor', people: 'group' },
-        { name: '去看日落', budget: 'free', duration: 'medium', place: 'outdoor', people: 'couple' },
-        { name: '露营（过夜）', budget: 'medium', duration: 'whole', place: 'outdoor', people: 'group' },
-        { name: '划船/皮划艇', budget: 'medium', duration: 'long', place: 'outdoor', people: 'couple' },
-        { name: '采摘草莓', budget: 'medium', duration: 'long', place: 'outdoor', people: 'group' },
-        { name: '去动物园/水族馆', budget: 'medium', duration: 'long', place: 'outdoor', people: 'group' },
-        { name: '参观历史古迹', budget: 'free', duration: 'long', place: 'outdoor', people: 'couple' },
-        { name: '玩剧本杀', budget: 'medium', duration: 'long', place: 'indoor', people: 'group' },
-        { name: '体验VR游戏', budget: 'medium', duration: 'medium', place: 'indoor', people: 'couple' },
-        { name: '做一次全身拉伸放松', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '学习摄影技巧并出门拍照', budget: 'free', duration: 'long', place: 'outdoor', people: 'alone' },
-        { name: '学习魔术小技巧', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '去游戏厅', budget: 'cheap', duration: 'medium', place: 'indoor', people: 'couple' },
-        { name: '做一次志愿者活动', budget: 'free', duration: 'whole', place: 'outdoor', people: 'group' },
-        { name: '逛家具城找灵感', budget: 'free', duration: 'long', place: 'indoor', people: 'alone' },
-        { name: '学做咖啡拉花', budget: 'cheap', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '去天台吹风看星星', budget: 'free', duration: 'short', place: 'outdoor', people: 'couple' },
-        { name: '去寺庙/道观静心', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '尝试断舍离/捐赠旧物', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '给植物浇水/修剪枝叶', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '跟着视频做一套拉伸操', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '给朋友发一条问候语音', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '列出今天的3个小成就', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '洗一个热水澡放松', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '在窗边发呆看云', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '给自己的水杯做一次深度清洁', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '回忆最近开心的一件事并写下来', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '站在阳台上深呼吸5分钟', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '整理电脑桌面/文件夹', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' },
-        { name: '学一句外语（用手机app）', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '做一次眼部按摩操', budget: 'free', duration: 'short', place: 'indoor', people: 'alone' },
-        { name: '翻看老照片', budget: 'free', duration: 'medium', place: 'indoor', people: 'alone' }
-    ];
-
-    // 映射表
-    const BUDGET_MAP = { free: '免费', cheap: '小资', medium: '中等', expensive: '稍贵' };
-    const DURATION_MAP = { short: '15分钟内', medium: '半小时', long: '1-2小时', whole: '半天以上' };
-    const PLACE_MAP = { indoor: '🏠 室内', outdoor: '🌳 户外' };
-    const PEOPLE_MAP = { alone: '👤 独自', couple: '👥 结伴', group: '👨‍👩‍👧‍👦 多人' };
-
-    const BUDGET_OPTS = [
-        { label: '任意', value: 'any' },
-        { label: '免费', value: 'free' },
-        { label: '小资(<50元)', value: 'cheap' },
-        { label: '中等(50-200)', value: 'medium' },
-        { label: '稍贵(>200)', value: 'expensive' }
-    ];
-    const DURATION_OPTS = [
-        { label: '任意', value: 'any' },
-        { label: '15分钟内', value: 'short' },
-        { label: '半小时', value: 'medium' },
-        { label: '1-2小时', value: 'long' },
-        { label: '半天以上', value: 'whole' }
-    ];
-    const PLACE_OPTS = [
-        { label: '任意', value: 'any' },
-        { label: '🏠 室内', value: 'indoor' },
-        { label: '🌳 户外', value: 'outdoor' }
-    ];
-    const PEOPLE_OPTS = [
-        { label: '任意', value: 'any' },
-        { label: '👤 独自', value: 'alone' },
-        { label: '👥 结伴', value: 'couple' },
-        { label: '👨‍👩‍👧‍👦 多人', value: 'group' }
-    ];
-
-    // 状态
-    let selectedBudget = 'any';
-    let selectedDuration = 'any';
-    let selectedPlace = 'any';
-    let selectedPeople = 'any';
-    let cracking = false;
-    let lastTaskName = '';
-    let filterOpen = false;
-
-    // DOM
-    const eggWrapper = document.getElementById('eggWrapper');
-    const crackLine = document.getElementById('crackLine');
-    const paperModal = document.getElementById('paperModal');
-    const paperTask = document.getElementById('paperTask');
-    const paperTags = document.getElementById('paperTags');
-    const closePaper = document.getElementById('closePaper');
-    const resetBtn = document.getElementById('resetBtn');
-    const filterHeader = document.getElementById('filterHeader');
-    const filterBody = document.getElementById('filterBody');
-    const filterArrow = document.getElementById('filterArrow');
-    const feedbackFab = document.getElementById('feedbackFab');
-    const feedbackModal = document.getElementById('feedbackModal');
-    const closeFeedbackModal = document.getElementById('closeFeedbackModal');
-    const feedbackOptionsDiv = document.getElementById('feedbackOptions');
-    const feedbackText = document.getElementById('feedbackText');
-    const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
-
-    function renderOptions() {
-        const budgetGroup = document.getElementById('budgetGroup');
-        const durationGroup = document.getElementById('durationGroup');
-        const placeGroup = document.getElementById('placeGroup');
-        const peopleGroup = document.getElementById('peopleGroup');
-        budgetGroup.innerHTML = BUDGET_OPTS.map(opt => `<div class="option ${selectedBudget === opt.value ? 'active' : ''}" data-type="budget" data-value="${opt.value}">${opt.label}</div>`).join('');
-        durationGroup.innerHTML = DURATION_OPTS.map(opt => `<div class="option ${selectedDuration === opt.value ? 'active' : ''}" data-type="duration" data-value="${opt.value}">${opt.label}</div>`).join('');
-        placeGroup.innerHTML = PLACE_OPTS.map(opt => `<div class="option ${selectedPlace === opt.value ? 'active' : ''}" data-type="place" data-value="${opt.value}">${opt.label}</div>`).join('');
-        peopleGroup.innerHTML = PEOPLE_OPTS.map(opt => `<div class="option ${selectedPeople === opt.value ? 'active' : ''}" data-type="people" data-value="${opt.value}">${opt.label}</div>`).join('');
-
-        document.querySelectorAll('#budgetGroup .option').forEach(el => {
-            el.addEventListener('click', () => { selectedBudget = el.dataset.value; renderOptions(); });
-        });
-        document.querySelectorAll('#durationGroup .option').forEach(el => {
-            el.addEventListener('click', () => { selectedDuration = el.dataset.value; renderOptions(); });
-        });
-        document.querySelectorAll('#placeGroup .option').forEach(el => {
-            el.addEventListener('click', () => { selectedPlace = el.dataset.value; renderOptions(); });
-        });
-        document.querySelectorAll('#peopleGroup .option').forEach(el => {
-            el.addEventListener('click', () => { selectedPeople = el.dataset.value; renderOptions(); });
-        });
-    }
-
-    function filterTasks() {
-        return TASKS.filter(task => {
-            if (selectedBudget !== 'any' && task.budget !== selectedBudget) return false;
-            if (selectedDuration !== 'any' && task.duration !== selectedDuration) return false;
-            if (selectedPlace !== 'any' && task.place !== selectedPlace) return false;
-            if (selectedPeople !== 'any' && task.people !== selectedPeople) return false;
-            return true;
-        });
-    }
-
-    function crackEgg() {
-        if (cracking) return;
-        const filtered = filterTasks();
-        if (filtered.length === 0) {
-            alert('没有符合条件的事项，请放宽筛选');
-            return;
-        }
-        let selected;
-        if (filtered.length === 1) {
-            selected = filtered[0];
-        } else {
-            let attempts = 0;
-            do {
-                const rand = Math.floor(Math.random() * filtered.length);
-                selected = filtered[rand];
-                attempts++;
-                if (selected.name !== lastTaskName || attempts >= 5) break;
-            } while (true);
-        }
-        lastTaskName = selected.name;
-
-        cracking = true;
-        eggWrapper.classList.add('crack-animation');
-        crackLine.style.display = 'block';
-        setTimeout(() => {
-            eggWrapper.classList.remove('crack-animation');
-            crackLine.style.display = 'none';
-            showPaper(selected);
-            cracking = false;
-        }, 300);
-    }
-
-    function showPaper(task) {
-        paperTask.innerText = task.name;
-        const tags = [
-            BUDGET_MAP[task.budget],
-            DURATION_MAP[task.duration],
-            PLACE_MAP[task.place],
-            PEOPLE_MAP[task.people]
-        ];
-        paperTags.innerHTML = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-        paperModal.style.display = 'flex';
-    }
-
-    let selectedFeedbackType = '';
-    function openFeedbackModal() {
-        feedbackModal.style.display = 'flex';
-        selectedFeedbackType = '';
-        feedbackText.style.display = 'none';
-        submitFeedbackBtn.style.display = 'none';
-        feedbackText.value = '';
-        feedbackOptionsDiv.style.display = 'block';
-    }
-    function closeFeedback() {
-        feedbackModal.style.display = 'none';
-    }
-    function onSelectFeedbackType(type) {
-        selectedFeedbackType = type;
-        feedbackOptionsDiv.style.display = 'none';
-        feedbackText.style.display = 'block';
-        submitFeedbackBtn.style.display = 'block';
-    }
-    function submitFeedback() {
-        const content = feedbackText.value.trim();
-        if (!content) {
-            alert('请填写反馈内容');
-            return;
-        }
-        let typeLabel = '';
-        if (selectedFeedbackType === 'idea') typeLabel = '💡 好点子';
-        else if (selectedFeedbackType === 'wrong') typeLabel = '⚠️ 分类不对';
-        else typeLabel = '🗣️ 其他';
-
-        const fullMessage = `【${typeLabel}】\n${content}\n\n（来自「敲蛋救无聊」用户反馈）`;
-        copyToClipboard(fullMessage);
-        alert(`反馈已复制到剪贴板，请粘贴后发送邮件至 ${CONTACT_EMAIL}\n感谢你的支持！`);
-        closeFeedback();
-    }
-    function copyToClipboard(text) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-    }
-
-    // 事件绑定
-    eggWrapper.addEventListener('click', crackEgg);
-    closePaper.addEventListener('click', () => { paperModal.style.display = 'none'; });
-    paperModal.addEventListener('click', (e) => { if (e.target === paperModal) paperModal.style.display = 'none'; });
-    resetBtn.addEventListener('click', () => {
-        selectedBudget = 'any';
-        selectedDuration = 'any';
-        selectedPlace = 'any';
-        selectedPeople = 'any';
-        renderOptions();
-    });
-    filterHeader.addEventListener('click', () => {
-        filterOpen = !filterOpen;
-        filterBody.classList.toggle('open', filterOpen);
-        filterArrow.innerText = filterOpen ? '▲' : '▼';
-    });
-    feedbackFab.addEventListener('click', openFeedbackModal);
-    closeFeedbackModal.addEventListener('click', closeFeedback);
-    feedbackModal.addEventListener('click', (e) => { if (e.target === feedbackModal) closeFeedback(); });
-    feedbackOptionsDiv.querySelectorAll('.feedback-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-            const type = opt.dataset.type;
-            onSelectFeedbackType(type);
-        });
-    });
-    submitFeedbackBtn.addEventListener('click', submitFeedback);
-
-    // 初始化
-    renderOptions();
-    filterBody.classList.remove('open');
-    filterArrow.innerText = '▼';
-</script>
+<script src="data.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
