@@ -246,7 +246,7 @@ feedbackForm.addEventListener('submit', async (e) => {
     formData.append('type', selectedFeedbackType);
 
     try {
-        const response = await fetch('/', {
+        const response = await fetch('/thank-you', {
             method: 'POST',
             body: formData
         });

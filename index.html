@@ -13,7 +13,7 @@
         <span class="subtitle">敲碎一颗蛋，获得今日灵感</span>
     </div>
 
-    <!-- 筛选面板（不变） -->
+    <!-- 筛选面板 -->
     <div class="filter-panel">
         <div class="filter-header" id="filterHeader">
             <span>🔍 筛选条件</span>
@@ -57,7 +57,7 @@
         </div>
     </div>
 
-    <!-- 访问计数器（蛋的下方） -->
+    <!-- 访问计数器 -->
     <div class="visit-counter">🥚 已有 <span id="visitCount">0</span> 人敲过这颗蛋</div>
 </div>
 
@@ -81,20 +81,27 @@
     <div class="fab-text">反馈</div>
 </div>
 
-<!-- 左侧自定义库按钮（铅笔图标） -->
+<!-- 左侧自定义库按钮 -->
 <div class="custom-fab" id="customFab">
     <div class="custom-icon">✏️</div>
     <div class="custom-text">我的点子</div>
 </div>
 
-<!-- 反馈弹窗（Netlify Forms） -->
+<!-- 反馈弹窗（Netlify Forms - 修复版） -->
 <div id="feedbackModal" class="feedback-modal" style="display: none;">
     <div class="feedback-card">
         <div class="close-feedback" id="closeFeedbackModal">✕</div>
         <h3>📢 告诉蛋蛋你的想法</h3>
-        <form id="feedbackForm" data-netlify="true" name="feedback" netlify-honeypot="bot-field" method="POST" action="/">
+        <!-- 关键修改：添加 data-netlify="true" 和 action="thank-you" -->
+        <form id="feedbackForm" name="feedback" data-netlify="true" method="POST" action="/thank-you" netlify-honeypot="bot-field">
+            <!-- 隐藏的防机器人字段（Netlify 要求） -->
+            <p class="hidden" style="display: none;">
+                <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+            </p>
+            <!-- 必须的隐藏表单名 -->
             <input type="hidden" name="form-name" value="feedback" />
             <input type="hidden" id="feedbackType" name="type" value="" />
+            
             <div id="feedbackOptions">
                 <div class="feedback-option" data-type="idea">💡 我也有个很棒的点子来对抗无聊！</div>
                 <div class="feedback-option" data-type="wrong">⚠️ 有个事件好像分类不太对呢……</div>
@@ -114,10 +121,27 @@
         <button id="showAddFormBtn" class="add-btn">➕ 添加新点子</button>
         <div id="addForm" style="display: none; margin-top: 16px;">
             <input type="text" id="newName" placeholder="活动名称" required>
-            <select id="newBudget"><option value="free">免费</option><option value="cheap">小资</option><option value="medium">中等</option><option value="expensive">稍贵</option></select>
-            <select id="newDuration"><option value="short">15分钟内</option><option value="medium">半小时</option><option value="long">1-2小时</option><option value="whole">半天以上</option></select>
-            <select id="newPlace"><option value="indoor">室内</option><option value="outdoor">户外</option></select>
-            <select id="newPeople"><option value="alone">独自</option><option value="couple">结伴</option><option value="group">多人</option></select>
+            <select id="newBudget">
+                <option value="free">免费</option>
+                <option value="cheap">小资</option>
+                <option value="medium">中等</option>
+                <option value="expensive">稍贵</option>
+            </select>
+            <select id="newDuration">
+                <option value="short">15分钟内</option>
+                <option value="medium">半小时</option>
+                <option value="long">1-2小时</option>
+                <option value="whole">半天以上</option>
+            </select>
+            <select id="newPlace">
+                <option value="indoor">室内</option>
+                <option value="outdoor">户外</option>
+            </select>
+            <select id="newPeople">
+                <option value="alone">独自</option>
+                <option value="couple">结伴</option>
+                <option value="group">多人</option>
+            </select>
             <button id="saveCustomBtn" class="add-btn">保存</button>
         </div>
         <button id="closeCustomModal" class="add-btn" style="background: #e7cfb5; margin-top: 10px;">关闭</button>
