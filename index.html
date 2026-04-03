@@ -20,6 +20,12 @@
             <span id="filterArrow">▼</span>
         </div>
         <div class="filter-body" id="filterBody">
+            <!-- 事项来源 - 放在最上面 -->
+            <div class="filter-group">
+                <span class="filter-label">📚 事项来源</span>
+                <div class="option-group" id="sourceGroup"></div>
+            </div>
+
             <div class="filter-group">
                 <span class="filter-label">💰 预算</span>
                 <div class="option-group" id="budgetGroup"></div>
@@ -56,9 +62,6 @@
             </div>
         </div>
     </div>
-
-    <!-- 访问计数器 -->
-    <div class="visit-counter">🥚 已有 <span id="visitCount">0</span> 人敲过这颗蛋</div>
 </div>
 
 <!-- 纸条弹窗 -->
@@ -75,54 +78,11 @@
     </div>
 </div>
 
-<!-- 右侧反馈按钮 -->
-<div class="feedback-fab" id="feedbackFab">
-    <div class="fab-icon">💬</div>
-    <div class="fab-text">反馈</div>
-</div>
-
 <!-- 左侧自定义库按钮 -->
 <div class="custom-fab" id="customFab">
     <div class="custom-icon">✏️</div>
     <div class="custom-text">我的点子</div>
 </div>
-
-<!-- 反馈弹窗（Netlify Forms - 修复版） -->
-<div id="feedbackModal" class="feedback-modal" style="display: none;">
-    <div class="feedback-card">
-        <div class="close-feedback" id="closeFeedbackModal">✕</div>
-        <h3>📢 告诉蛋蛋你的想法</h3>
-        <!-- 关键修改：添加 data-netlify="true" 和 action="thank-you" -->
-        <form id="feedbackForm" name="feedback" data-netlify="true" method="POST" action="/thank-you" netlify-honeypot="bot-field">
-            <!-- 隐藏的防机器人字段（Netlify 要求） -->
-            <p class="hidden" style="display: none;">
-                <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
-            </p>
-            <!-- 必须的隐藏表单名 -->
-            <input type="hidden" name="form-name" value="feedback" />
-            <input type="hidden" id="feedbackType" name="type" value="" />
-            
-            <div id="feedbackOptions">
-                <div class="feedback-option" data-type="idea">💡 我也有个很棒的点子来对抗无聊！</div>
-                <div class="feedback-option" data-type="wrong">⚠️ 有个事件好像分类不太对呢……</div>
-                <div class="feedback-option" data-type="other">🗣️ 我还有别的话要和蛋蛋说！</div>
-            </div>
-            <textarea id="feedbackText" name="message" class="feedback-textarea" placeholder="请写下你的建议或问题..." rows="3" style="display: none;"></textarea>
-            <button type="submit" id="submitFeedbackBtn" class="feedback-submit-btn" style="display: none;">提交</button>
-        </form>
-    </div>
-</div>
-
-<!-- Netlify 隐藏表单副本（用于让 Netlify 扫描到） -->
-<div style="position: absolute; left: -9999px; top: -9999px;">
-    <form name="feedback" data-netlify="true" netlify-honeypot="bot-field" method="POST" action="/thank-you">
-        <input type="hidden" name="form-name" value="feedback" />
-        <input type="text" name="type" />
-        <textarea name="message"></textarea>
-        <input type="text" name="bot-field" />
-    </form>
-</div>
-
 
 <!-- 自定义库弹窗 -->
 <div id="customModal" class="custom-modal" style="display: none;">
